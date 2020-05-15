@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/sidebar.css">
+  <link rel="stylesheet" href="css/register.css">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/yourcode.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/7.14.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.14.0/firebase-firestore.js"></script>
+
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+       https://firebase.google.com/docs/web/setup#available-libraries -->
+
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyCfKl057B-sd3ngJlfOcih_vDif04cl2Ew",
+      authDomain: "sneaker-78199.firebaseapp.com",
+      databaseURL: "https://sneaker-78199.firebaseio.com",
+      projectId: "sneaker-78199",
+      storageBucket: "sneaker-78199.appspot.com",
+      messagingSenderId: "319704351526",
+      appId: "1:319704351526:web:59f0228d3888d5b1ef37e7"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
+  <title></title>
+</head>
+
+<body>
+  <div id="mySidebar" class="sidebar">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <a href="index.html">Home</a>
+    <button class="dropdown-btn">Browse
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-container">
+      <a href="sneakers.html?brand=Jordan">Jordan</a>
+      <a href="sneakers.html?brand=Nike">Nike</a>
+      <a href="sneakers.html?brand=Yeezy">Yeezy</a>
+      <a href="sneakers.html?brand=Adidas">Adidas</a>
+    </div>
+    <a href="register.html">Register</a>
+    <a href="shoppingcart.html"><span class="glyphicon glyphicon-shopping-cart"></span></a>
+  </div>
+
+  <div id="main">
+    <div id="openbtnbox">
+      <button class="openbtn" onclick="openNav()">&#9776;</button>
+    </div>
+  </div>
+  <main>
+    <h2 id="logo">
+      "Register new sneakers here"
+    </h2>
+    <form action="">
+      <div class="input-field">
+        <input type="text" id="inpSneaker" required />
+        <label for="inpSneaker">Sneaker Name</label>
+      </div>
+      <div class="input-field">
+        <input type="text" id="inpBrand" required />
+        <label for="inpBrand">Brand</label>
+      </div>
+      <div class="input-field">
+        <input type="text" id="inpInformation" required />
+        <label for="inpInformation">Information</label>
+      </div>
+      <div class="input-field">
+        <input type="number" id="inpPrice" required />
+        <label for="inpPrice">Sneaker Price</label>
+      </div>
+      <div class="input-field">
+        <input type="number" id="inpSold" required />
+        <label for="inpSold">Number of units sold</label>
+      </div>
+      <div class="input-field">
+        <input type="text" id="inpImg" required />
+        <label for="inpImg">Sneaker img</label>
+      </div>
+      <button class="register" type="submit">Register sneaker</button>
+    </form>
+
+    <script type="text/javascript">
+      const inpSneaker = document.querySelector("#inpSneaker");
+      const inpBrand = document.querySelector("#inpBrand");
+      const inpInformation = document.querySelector("#inpInformation");
+      const inpPrice = document.querySelector("#inpPrice");
+      const inpSold = document.querySelector("#inpSold");
+      const inpImg = document.querySelector("#inpImg");
+      const form = document.querySelector("form");
+
+      const db = firebase.firestore();
+      const sneaker = db.collection("sneaker");
+
+
+
+      form.onsubmit = (event) => {
+        event.preventDefault();
+        try {
+          sneaker.add({
+            sneakerName: inpSneaker.value,
+            brand: inpBrand.value,
+            information: inpInformation.value,
+            price: Number(inpPrice.value),
+            sold: Number(inpSold.value),
+            sneakerImg: inpImg.value,
+          });
+          form.reset();
+          alert("Sneaker added to the database!");
+        } catch (err) {
+          alert("A problem occured, the sneaker wasn't added to the database..")
+        }
+      }
+      /* Set the width of the sidebar to 250px and the left margin of the page content to 250px */
+      function openNav() {
+        document.getElementById("mySidebar").style.width = "250px";
+        document.getElementById("main").style.marginLeft = "250px";
+      }
+
+      /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
+      function closeNav() {
+        document.getElementById("mySidebar").style.width = "0";
+        document.getElementById("main").style.marginLeft = "0";
+      }
+      //* Loop through all dropdown buttons to toggle between hiding and showing its dropdown content - This allows the user to have multiple dropdowns without any conflict */
+      var dropdown = document.getElementsByClassName("dropdown-btn");
+      var i;
+
+      for (i = 0; i < dropdown.length; i++) {
+        dropdown[i].addEventListener("click", function () {
+          this.classList.toggle("active");
+          var dropdownContent = this.nextElementSibling;
+          if (dropdownContent.style.display === "block") {
+            dropdownContent.style.display = "none";
+          } else {
+            dropdownContent.style.display = "block";
+          }
+        });
+      }
+    </script>
+  </main>
+  <footer></footer>
+
+</body>
+
+</html>

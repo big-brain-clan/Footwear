@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/sidebar.css">
+  <link rel="stylesheet" href="css/sneaker.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300&display=swap" rel="stylesheet">
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/7.14.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.14.0/firebase-firestore.js"></script>
+
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+         https://firebase.google.com/docs/web/setup#available-libraries -->
+
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyCfKl057B-sd3ngJlfOcih_vDif04cl2Ew",
+      authDomain: "sneaker-78199.firebaseapp.com",
+      databaseURL: "https://sneaker-78199.firebaseio.com",
+      projectId: "sneaker-78199",
+      storageBucket: "sneaker-78199.appspot.com",
+      messagingSenderId: "319704351526",
+      appId: "1:319704351526:web:59f0228d3888d5b1ef37e7"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
+  <title></title>
+</head>
+
+<body>
+  <div id="mySidebar" class="sidebar">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <a href="index.html">Home</a>
+    <button class="dropdown-btn">Browse
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-container">
+      <a href="sneakers.html?brand=Jordan">Jordan</a>
+      <a href="sneakers.html?brand=Nike">Nike</a>
+      <a href="sneakers.html?brand=Yeezy">Yeezy</a>
+      <a href="sneakers.html?brand=Adidas">Adidas</a>
+    </div>
+    <a href="register.html">Register</a>
+    <a href="shoppingcart.html"><span class="glyphicon glyphicon-shopping-cart"></span></a>
+  </div>
+
+  <div id="main">
+    <div id="openbtnbox">
+      <button class="openbtn" onclick="openNav()">&#9776;</button>
+    </div>
+  </div>
+  <main>
+    <h1 id="logo">
+      "Footwear"
+    </h1>
+    <section id="secSneaker">
+    </section>
+
+
+    <script type="text/javascript">
+      const db = firebase.firestore();
+      const sneaker = db.collection("sneaker");
+      const shoppingCart = db.collection("sneakersInCart")
+
+      const url = new URL(window.location.href);
+      const id = url.searchParams.get("id");
+
+      const visSneaker = async (id) => {
+        const svar = await sneaker.doc(id).get();
+        lagHTML(svar.data());
+      }
+
+      visSneaker(id); // Funksjonskall, gjør at funksjonen visDyr kjøres når siden lastes
+
+      const lagHTML = (sneaker) => {
+        secSneaker.innerHTML += `
+              <div>
+                <h1>${sneaker.sneakerName}</h1>
+                <p>Price: $${sneaker.price},-</p>
+                <p>Information: ${sneaker.information}</p>
+                <p>${sneaker.sold} Sold</p>
+                <button id="button" onclick="addToCart('${id}')"><p id="btnText">Add to Cart</p></button>
+              </div>
+              <div>
+                <img src=${sneaker.sneakerImg} alt="Image of ${sneaker.sneakerImg}">
+              </div>
+        `;
+      }
+
+      const addToCart = async (id) => {
+        await shoppingCart.add({
+          sneakerId: id,
+          time: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        alert("Sneaker added to shopping cart");
+      }
+    </script>
+    <script src="javascript/sidebar.js"></script>
+  </main>
+  <footer></footer>
+
+</body>
+
+</html>
